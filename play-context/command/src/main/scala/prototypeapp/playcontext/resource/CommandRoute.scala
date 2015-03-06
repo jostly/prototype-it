@@ -10,6 +10,8 @@ object CommandRoute {
   case class JoinGame(playerName: String, gameId: String)
 
   case class GameJoined(token: String)
+
+  case class CreateGame(name: String, players: Int)
 }
 
 trait CommandRoute { self: Resource =>
@@ -32,6 +34,14 @@ trait CommandRoute { self: Resource =>
             publish(JoinGameCommand(request.playerName, request.gameId))
             complete(StatusCodes.Accepted -> GameJoined("blabla"))
           }
+        }
+      }
+    } ~
+    pathPrefix("game") {
+      post {
+        entity(as[CreateGame]) { request =>
+          logger.info(s"Received $request")
+          complete(StatusCodes.Accepted)
         }
       }
     }

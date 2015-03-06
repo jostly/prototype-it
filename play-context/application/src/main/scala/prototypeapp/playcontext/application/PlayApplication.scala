@@ -7,7 +7,7 @@ import infrastructure.{BindActor, Resource}
 import org.json4s.native.Serialization
 import org.json4s.{Formats, NoTypeHints}
 import prototypeapp.playcontext.command.CommandHandler
-import prototypeapp.playcontext.resource.CommandRoute
+import prototypeapp.playcontext.resource.{CommandRoute, QueryRoute}
 import spray.can.Http
 
 import scala.concurrent.Await
@@ -33,7 +33,7 @@ class PlayApplication(system: ActorSystem, port: Int) {
 }
 
 class PlayRoutingActor
-  extends Actor with CommandRoute with Resource {
+  extends Actor with CommandRoute with QueryRoute with Resource {
 
   implicit def json4sFormats: Formats = Serialization.formats(NoTypeHints)
 
@@ -42,6 +42,9 @@ class PlayRoutingActor
   def receive = runRoute(
     pathPrefix("service") {
       commandRoute
+    } ~
+    pathPrefix("query") {
+      queryRoute
     }
   )
 }

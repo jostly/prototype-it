@@ -66,6 +66,11 @@ with BeforeAndAfterAll with BeforeAndAfterEach {
   def playCommandUrl: String = s"$host:$playApplicationPort/service"
 
   def playCommandUrl(s: String): String = s"$playCommandUrl/$s"
+
+  def playQueryUrl: String = s"$host:$playApplicationPort/query"
+
+  def pollEvents(since: Option[Long] = None) =
+    get(s"$playQueryUrl/events/poll", unmarshal[List[(String, String)]])
   
 
 }
